@@ -1,5 +1,5 @@
-import { createServerClient } from '@supabase/ssr'
-import { NextResponse } from 'next/server'
+import { createServerClient } from '@supabase/ssr';
+import { NextResponse } from 'next/server';
 
 export async function updateSession(request) {
   let supabaseResponse = NextResponse.next({ request });
@@ -13,10 +13,13 @@ export async function updateSession(request) {
           return request.cookies.getAll()
         },
         setAll(cookiesToSet) {
+          // This passes the refreshed token to server components
+          // so they don't try and do it themselves:
           cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value));
 
           supabaseResponse = NextResponse.next({ request });
 
+          // This passes the refreshed token to the browser
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options));
         },
@@ -30,6 +33,7 @@ export async function updateSession(request) {
 
   // IMPORTANT: DO NOT REMOVE auth.getUser()
 
+  // This call refreshes the auth token:
   const {
     data: { user },
   } = await supabase.auth.getUser()

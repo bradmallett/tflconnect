@@ -1,10 +1,10 @@
-import { updateSession } from '@/utils/supabase/middleware'
+import { updateSession } from '@/utils/supabase/middleware';
 
 // Since Server Components can't write cookies,
 // you need middleware to refresh expired Auth tokens and store them.
 
 export async function middleware(request) {
-  return await updateSession(request)
+  return await updateSession(request);
 }
 
 // if /constituents is re-named, need to change that here
